@@ -9,6 +9,7 @@ const { auth } = require("../services/UserService");
 router.post('/user',  userService.create);
 router.get('/users', auth, userService.getAll);
 router.get('/user/:id', userService.findById);
+router.get('/users/:nome', userService.findByName);
 router.delete('/user/:id', userService.delete);
 router.put('/user/:id', userService.update);
 router.post('/auth/:id', userService.token);
@@ -16,8 +17,10 @@ router.post('/auth/:id', userService.token);
 router.post('/group', auth, groupService.create);
 router.get('/groups', groupService.getAll);
 router.get('/group/:id', groupService.findById);
+router.get('/groups/:nome', groupService.findByName);
 router.delete('/group/:id', groupService.delete);
 router.put('/group/:id', groupService.update);
+router.put('/groups/addUser', auth, groupService.addUser);
 
 router.post('/post', postService.create);
 router.get('/posts', postService.getAll);

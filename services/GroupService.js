@@ -62,6 +62,18 @@ class GroupService {
         }
     }
 
+    async findByName(req, res){
+        var nome = req.params.nome;
+        try{
+            var group = await Group.find({'nome': nome});
+            res.json(group);
+        }catch{
+            res.send("consulta inválida");
+            console.log(err);
+            return false;
+        }
+    }
+
     async delete(req, res) {
         var id = req.params.id;
         try {
@@ -86,6 +98,31 @@ class GroupService {
             return false;
         }
     }
+
+    async addUser(req, res){
+        var {id} = req.loggedUser;
+        var {id_group, id_user} = req.body;
+        var user = await User.find({"_id": id});
+        var grupo = await Group.find({"_id": id_group});
+        var seguidores = [];
+        seguidores.push(...grupo[0].seguidores, id_user) 
+        console.log(seguidores);
+        // grupo.seguidores.push(id_user);
+        if (user[0].admin == true) {
+            try{
+                await Group.updateOne({'_id': id_group, seguidores: seguidores});
+                res.send("Usuário adicionado");
+            }catch(err){
+                res.send("Não foi possivel adicionar este usuário");
+                console.log(err);
+                return false;
+            }
+
+        }else{
+            res.send("Usuário não é admin");
+        }
+
+     }
 
 }
 

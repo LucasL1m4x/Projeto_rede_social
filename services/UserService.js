@@ -57,11 +57,24 @@ class UserService{
             var user = await User.find({'_id': id});
             res.json(user);
         }catch{
-            console.log(err);
             res.send("consulta inválida");
+            console.log(err);
             return false;
         }
     }
+
+    async findByName(req, res){
+        var nome = req.params.nome;
+        try{
+            var user = await User.find({'nome': nome});
+            res.json(user);
+        }catch{
+            res.send("consulta inválida");
+            console.log(err);
+            return false;
+        }
+    }
+    
 
     async delete(req, res){
         var id = req.params.id;
