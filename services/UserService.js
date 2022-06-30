@@ -93,25 +93,27 @@ class UserService{
     async token(req, res){
         var id = req.params.id;
         var {email, senha} = req.body;
+        var user = await User.find({'_id': id});
 
-        var userEmail = await User.find({'_id': id}, {email: 1, _id: 0});
-        var userSenha = await User.find({'_id': id}, {senha: 1, _id: 0});
-
-        var reqSenha =[
-            {
-                senha: senha
-            }
-        ]
-        //console.log(reqSenha, userSenha);
         if(user != undefined){
-                try{
-                    var token = jwt.sign({id: id, email: userEmail}, JWTSecret, {expiresIn: '48h'});
-                    res.status(200);
-                    res.json({token: token});
-                }catch{
-                    res.status(400);
-                    res.json("Falha interna");
+            if(user[0].email == email){
+                if(user[0].senha == senha) {
+                    try{
+                        var token = jwt.sign({id: id, email: user[0].email}, JWTSecret, {expiresIn: '48h'});
+                        res.status(200);
+                        res.json({token: token});
+                    }catch{
+                        res.status(400);
+                        res.json("Falha interna");
+                    }    
+                }else{
+                    res.status(401);
+                    res.send("Senha incorreta");
                 }
+            }else{
+                res.status(401);
+                res.send("Email incorreto");
+            }
         }
     }
 
@@ -137,7 +139,6 @@ class UserService{
             res.status(401);
             res.json({err:"Token inválido!"});
         } 
-    
     }
 }
 

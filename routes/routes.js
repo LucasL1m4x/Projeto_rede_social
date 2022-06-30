@@ -13,7 +13,7 @@ router.delete('/user/:id', userService.delete);
 router.put('/user/:id', userService.update);
 router.post('/auth/:id', userService.token);
 
-router.post('/group', groupService.create);
+router.post('/group', auth, groupService.create);
 router.get('/groups', groupService.getAll);
 router.get('/group/:id', groupService.findById);
 router.delete('/group/:id', groupService.delete);
