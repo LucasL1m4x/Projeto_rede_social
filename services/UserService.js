@@ -2,6 +2,7 @@ var user = require("../models/User");
 var mongoose = require("mongoose");
 const jwt = require("jsonwebtoken");
 const { json } = require("body-parser");
+const { criaSessao, create } = require("./LogSessaoService");
 const JWTSecret = "Starwars";
 
 const User = mongoose.model("User", user);
@@ -26,11 +27,19 @@ class UserService{
             grupos      
         });
         try{
+            var users = await User.find();
+            users.forEach(u => {
+                if (u.email == newUser.email) {
+                    res.status(401);
+                    res.send('E-mail já cadastrado no sistema!');
+                    return false;
+                }
+            })
             await newUser.save();
             res.status(200);
             res.send("Cadastro de usuário realizado!");
             return true;
-        }catch{
+        }catch (err){
             console.log(err);
             res.send("Algo deu errado :(")
             return false;
@@ -44,7 +53,7 @@ class UserService{
             var consultas = await User.find();
             res.json(consultas);
             return true;
-        }catch{
+        }catch (err){
             console.log(err);
             res.send("Consulta inválida");
             return false;
@@ -56,7 +65,7 @@ class UserService{
         try{
             var user = await User.find({'_id': id});
             res.json(user);
-        }catch{
+        }catch (err){
             res.send("consulta inválida");
             console.log(err);
             return false;
@@ -68,7 +77,7 @@ class UserService{
         try{
             var user = await User.find({'nome': nome});
             res.json(user);
-        }catch{
+        }catch (err){
             res.send("consulta inválida");
             console.log(err);
             return false;
@@ -81,7 +90,7 @@ class UserService{
         try{
             await User.deleteOne({'_id': id});
             res.send("Usuário deletado");
-        }catch{
+        }catch (err){
             console.log(err);
             res.send("Não foi possível deletar o usuário");
             return false;
@@ -96,7 +105,7 @@ class UserService{
             await User.updateOne({'_id': id}, {nome: nome, departamento: departamento, cargo: cargo, 
                 email: email, data_nascimento: data_nascimento, telefone:telefone, admin: admin, foto: foto, senha: senha});
             res.send("Usuário atualizado");
-        }catch{
+        }catch (err){
             console.log(err);
             res.send("Não foi possível atualizar o usuário");
             return false;
@@ -115,7 +124,8 @@ class UserService{
                         var token = jwt.sign({id: id, email: user[0].email}, JWTSecret, {expiresIn: '48h'});
                         res.status(200);
                         res.json({token: token});
-                    }catch{
+                        create(id);
+                    }catch (err){
                         res.status(400);
                         res.json("Falha interna");
                     }    
@@ -144,7 +154,8 @@ class UserService{
                     res.json({err:"Token inválido!"});
                 }else{
                     req.token = token;
-                    req.loggedUser = {id: data.id,email: data.email};               
+                    req.loggedUser = {id: data.id,email: data.email};
+                    var id = {id: data.id};
                     next();
                 }
             });
