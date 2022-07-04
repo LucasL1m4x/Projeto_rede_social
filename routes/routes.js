@@ -14,6 +14,7 @@ router.get('/users/:nome', userService.findByName);
 router.delete('/user/:id', userService.delete);
 router.put('/user/:id', userService.update);
 router.post('/auth/:id', userService.token);
+
 router.get('/logs', LogSessaoService.numSessao);
 
 router.post('/group', auth, groupService.create);

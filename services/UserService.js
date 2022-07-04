@@ -158,7 +158,6 @@ class UserService{
                 } else {
                     req.token = token;
                     req.loggedUser = { id: data.id, email: data.email };
-                    var id = { id: data.id };
                     next();
                 }
             });
