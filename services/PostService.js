@@ -8,7 +8,7 @@ const Post = mongoose.model("Post", post);
 class PostService{
 
     async create(req, res){
-        var {id_user, tema, descricao, fotoPublicacao, curtidaDetalhe, comentarios, data} = req.body;
+        var {id_user, tema, descricao, fotoPublicacao, curtidaDetalhe, comentarios, data, interacoesDoTema} = req.body;
 
         var newPost = new Post({   
             id_user, 
@@ -17,7 +17,8 @@ class PostService{
             fotoPublicacao, 
             curtidaDetalhe, 
             comentarios, 
-            data     
+            data,
+            interacoesDoTema:"0"     
         });
         try{
             await newPost.save();
@@ -129,6 +130,46 @@ class PostService{
             res.send('Algo deu errado...')
             console.log(error);
         }
+    }
+
+    async countTema(req, res){
+
+            var {tema} = req.body;       
+            var posts = await Post.find({tema: tema});
+            var numCurtidas = 0;
+            var numComentarios = 0;
+            var lista = [
+                {
+                    interacoes
+                }
+            ]
+            for (let i = 0; i < posts.length; i++) {               
+                
+                if(posts[i].tema == tema){
+                    var resultCurtidas = await Post.find({tema: tema}).sort({curtidaDetalhe: 1});
+                    numCurtidas += (resultCurtidas[i].curtidaDetalhe).length;
+                    var resultComentarios = await Post.find({tema: tema}).sort({comentarios: 1});
+                    numComentarios += (resultComentarios[i].comentarios).length;  
+                }
+            }
+            var interacoes = numCurtidas + numComentarios;
+            var lista = await Post.find({$max: interacoes}).sort();
+            lista.push(interacoes);
+            await Post.updateMany({"tema": tema}, {interacoesDoTema: interacoes.toString()});
+            res.send("Tema atualizado");
+
+    }
+
+    async getMaxTema(req, res){
+        var posts = await Post.find().sort({interacoesDoTema: -1}).limit(1);
+
+        var lista = [];
+        for (let i = 0; i < posts.length; i++) {
+            if(parseInt(posts[i].interacoesDoTema) > 0){
+                lista.push(posts[i]);
+            }
+        }
+        res.json(lista);
     }
 
 }

@@ -4,8 +4,7 @@ const logSessaoModel = new mongoose.Schema({
 
     id_user: String,
     tipo: String,
-    data: Date,
-    numEntrada: String
+    data: String
 
 });
 

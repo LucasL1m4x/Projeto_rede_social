@@ -31,5 +31,7 @@ router.delete('/post/:id', postService.delete);
 router.put('/post/:id', postService.update);
 router.put('/posts/manageLike', auth, postService.manageLike);
 router.put('/posts/addComment', auth, postService.addComment);
+router.put('/tema', postService.countTema);
+router.get('/tema', postService.getMaxTema);
 
 module.exports = router;

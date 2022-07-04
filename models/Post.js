@@ -17,7 +17,8 @@ const postModel = new mongoose.Schema({
             texto: String
         }
     ],
-    data: String
+    data: String,
+    interacoesDoTema: String
 
 });
 
