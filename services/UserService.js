@@ -115,18 +115,19 @@ class UserService{
     }
 
     async token(req, res) {
-        var id = req.params.id;
+        // var id = req.params.id;
         var { email, senha } = req.body;
-        var user = await User.find({ '_id': id });
+        var user = await User.find({'email': email});
+        var idUser = await user[0].id;
 
         if (user != undefined) {
             if (user[0].email == email) {
                 if (user[0].senha == senha) {
                     try {
-                        var token = jwt.sign({ id: id, email: user[0].email }, JWTSecret, { expiresIn: '48h' });
+                        var token = jwt.sign({ id: idUser, email: user[0].email }, JWTSecret, { expiresIn: '48h' });
                         res.status(200);
                         res.json({ token: token });
-                        createLog(id);
+                        createLog(idUser);
                         
                     } catch (err) {
                         res.status(400);
