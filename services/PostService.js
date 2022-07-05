@@ -24,6 +24,7 @@ class PostService{
             await newPost.save();
             res.status(200);
             res.send("Cadastro de post realizado!");
+
             return true;
         }catch(err) {
             console.log(err);
@@ -135,25 +136,27 @@ class PostService{
     async countTema(req, res){
 
             var {tema} = req.body;       
-            var posts = await Post.find({tema: tema});
+            var posts = await Post.find({"tema": tema});
             var numCurtidas = 0;
             var numComentarios = 0;
+            var interacoesDoTema = 0;
             var lista = [
                 {
-                    interacoes
+                    interacoesDoTema
                 }
             ]
             for (let i = 0; i < posts.length; i++) {               
                 
                 if(posts[i].tema == tema){
-                    var resultCurtidas = await Post.find({tema: tema}).sort({curtidaDetalhe: 1});
+                    var resultCurtidas = await Post.find({"tema": tema}).sort({curtidaDetalhe: 1});
                     numCurtidas += (resultCurtidas[i].curtidaDetalhe).length;
-                    var resultComentarios = await Post.find({tema: tema}).sort({comentarios: 1});
+                    var resultComentarios = await Post.find({"tema": tema}).sort({comentarios: 1});
                     numComentarios += (resultComentarios[i].comentarios).length;  
                 }
             }
             var interacoes = numCurtidas + numComentarios;
-            var lista = await Post.find({$max: interacoes}).sort();
+            console.log(interacoes);
+            var lista = await Post.find({"interacoesDoTema": interacoes}).sort();
             lista.push(interacoes);
             await Post.updateMany({"tema": tema}, {interacoesDoTema: interacoes.toString()});
             res.send("Tema atualizado");
