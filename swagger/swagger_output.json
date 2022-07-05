@@ -1,0 +1,1396 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Rede Social",
+    "description": "API de manipulação de dados do sistema de Rede Social.",
+    "version": "1.0.0"
+  },
+  "host": "localhost:8686",
+  "basePath": "/",
+  "schemes": [
+    "http"
+  ],
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "home"
+        ],
+        "description": "Rota responsável por recuperar a tela inicial da Rede Social.",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Tela carregada com sucesso!"
+          },
+          "404": {
+            "description": "Houve uma falha interna..."
+          }
+        }
+      }
+    },
+    "/user": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "criação de usuário",
+        "description": "Rota responsável pelo cadastro de um usuário na Rede Social.",
+        "operationId": "CreateUser",
+        "parameters": [
+          {
+            "name": "input",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "example": "Angelina Jolie"
+                },
+                "departamento": {
+                  "example": "Marketing"
+                },
+                "cargo": {
+                  "example": "Gerente"
+                },
+                "email": {
+                  "example": "angel.jolie@gmail.com"
+                },
+                "data_nascimento": {
+                  "example": "27/08/1978"
+                },
+                "telefone": {
+                  "example": "11956623584"
+                },
+                "admin": {
+                  "example": false
+                },
+                "foto": {
+                  "example": "http://angelinajolie/profile.png"
+                },
+                "senha": {
+                  "example": "iquweh8237"
+                },
+                "seguindo": {
+                  "example": [
+                    {
+                      "_id": "62bf39f56a7274398c79cc6b"
+                    },
+                    {
+                      "_id": "62c2e6fb2e576326c9546c7c"
+                    }
+                  ]
+                },
+                "seguidores": {
+                  "example": [
+                    {
+                      "_id": "62bf39f56a7274398c79cc6b"
+                    },
+                    {
+                      "_id": "62bdde6f28c57e1c55509b70"
+                    },
+                    {
+                      "_id": "62c2e6fb2e576326c9546c7c"
+                    },
+                    {
+                      "_id": "62bc9a20c4d2e0d3818a4b94"
+                    },
+                    {
+                      "_id": "62bf238a8ac8969e969dc5e2"
+                    }
+                  ]
+                },
+                "grupos": {
+                  "example": [
+                    {
+                      "_id": "62be02b2168cc021ff51479e"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cadastro de usuário realizado com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "62be02b2168cc021ff51479e"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar realizar o cadastro..."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "seguir e deixar de seguir usuário",
+        "description": "Rota responsável por gerenciar as ações de seguir e deixar de seguir um usuário na Rede Social.",
+        "operationId": "FollowUnfollowUser",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id_user",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_user": {
+                  "example": "62bc8dc67ecd9c1757d023b2"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agora você segue o usuário!"
+          },
+          "401": {
+            "description": "É preciso estar logado para poder seguir outro usuário."
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar realizar a edição..."
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "listagem de usuários",
+        "description": "Rota responsável por listar todos os usuários da Rede Social.",
+        "operationId": "GetAllUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Busca de usuários concluída com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "62be02b2168cc021ff51479e"
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Eric Johnson"
+                  },
+                  "departamento": {
+                    "type": "string",
+                    "example": "Financeiro"
+                  },
+                  "cargo": {
+                    "type": "string",
+                    "example": "Gerente"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "eric.johnson@outlook.com"
+                  },
+                  "data_nascimento": {
+                    "type": "string",
+                    "example": "15/09/1987"
+                  },
+                  "telefone": {
+                    "type": "string",
+                    "example": "1244155226"
+                  },
+                  "admin": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "foto": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "senha": {
+                    "type": "string",
+                    "example": "238dfi7eyc"
+                  },
+                  "seguindo": {
+                    "example": []
+                  },
+                  "seguidores": {
+                    "example": [
+                      {
+                        "_id": "62bf39f56a7274398c79cc6b"
+                      },
+                      {
+                        "_id": "62c2e6fb2e576326c9546c7c"
+                      }
+                    ]
+                  },
+                  "grupos": {
+                    "example": []
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar buscar usuários..."
+          }
+        }
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "buscar usuário pelo ID",
+        "description": "Rota responsável por buscar um usuário pelo ID na Rede Social.",
+        "operationId": "FindUserByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62c2e6fb2e576326c9546c7c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca de usuário concluída com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "type": "string",
+                  "example": "62be02b2168cc021ff51479e"
+                },
+                "nome": {
+                  "type": "string",
+                  "example": "Eric Johnson"
+                },
+                "departamento": {
+                  "type": "string",
+                  "example": "Financeiro"
+                },
+                "cargo": {
+                  "type": "string",
+                  "example": "Gerente"
+                },
+                "email": {
+                  "type": "string",
+                  "example": "eric.johnson@outlook.com"
+                },
+                "data_nascimento": {
+                  "type": "string",
+                  "example": "15/09/1987"
+                },
+                "telefone": {
+                  "type": "string",
+                  "example": "1244155226"
+                },
+                "admin": {
+                  "type": "boolean",
+                  "example": true
+                },
+                "foto": {
+                  "type": "string",
+                  "example": ""
+                },
+                "senha": {
+                  "type": "string",
+                  "example": "238dfi7eyc"
+                },
+                "seguindo": {
+                  "example": []
+                },
+                "seguidores": {
+                  "example": [
+                    {
+                      "_id": "62bf39f56a7274398c79cc6b"
+                    },
+                    {
+                      "_id": "62c2e6fb2e576326c9546c7c"
+                    }
+                  ]
+                },
+                "grupos": {
+                  "example": []
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar buscar pelo usuário..."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "summary": "remoção de usuário",
+        "description": "Rota responsável por remover um usuário da Rede Social.",
+        "operationId": "DeleteUser",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62c2e6fb2e576326c9546c7c"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário excluído do sistema com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado para excluir a conta de um usuário."
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar remover usuário..."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "summary": "edição de usuário",
+        "description": "Rota responsável por editar as informações de um usuário da Rede Social.",
+        "operationId": "UpdateUser",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62c2e6fb2e576326c9546c7c"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "departamento": {
+                  "example": "Operações"
+                },
+                "cargo": {
+                  "example": "Líder"
+                },
+                "telefone": {
+                  "example": "1154225426"
+                },
+                "admin": {
+                  "example": true
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário alterado com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado como o usuário que se deseja editar para que seja possível atualizar as informações dele."
+          },
+          "404": {
+            "description": "Houve uma gfalha interna ao tentar editar as informações do usuário."
+          }
+        }
+      }
+    },
+    "/users/{nome}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "summary": "buscar usuários por nome",
+        "description": "Rota responsável por buscar usuários por nome na Rede Social.",
+        "operationId": "FindUsersByName",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "body",
+            "type": "string",
+            "example": "Ang"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "nome": {
+                    "example": "Angelina Jolie"
+                  },
+                  "departamento": {
+                    "example": "Marketing"
+                  },
+                  "cargo": {
+                    "example": "Gerente"
+                  },
+                  "email": {
+                    "example": "angel.jolie@gmail.com"
+                  },
+                  "data_nascimento": {
+                    "example": "27/08/1978"
+                  },
+                  "telefone": {
+                    "example": "11956623584"
+                  },
+                  "admin": {
+                    "example": false
+                  },
+                  "foto": {
+                    "example": "http://angelinajolie/profile.png"
+                  },
+                  "senha": {
+                    "example": "iquweh8237"
+                  },
+                  "seguindo": {
+                    "example": [
+                      {
+                        "_id": "62bf39f56a7274398c79cc6b"
+                      },
+                      {
+                        "_id": "62c2e6fb2e576326c9546c7c"
+                      }
+                    ]
+                  },
+                  "seguidores": {
+                    "example": [
+                      {
+                        "_id": "62bf39f56a7274398c79cc6b"
+                      },
+                      {
+                        "_id": "62bdde6f28c57e1c55509b70"
+                      },
+                      {
+                        "_id": "62c2e6fb2e576326c9546c7c"
+                      },
+                      {
+                        "_id": "62bc9a20c4d2e0d3818a4b94"
+                      },
+                      {
+                        "_id": "62bf238a8ac8969e969dc5e2"
+                      }
+                    ]
+                  },
+                  "grupos": {
+                    "example": [
+                      {
+                        "_id": "62be02b2168cc021ff51479e"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao buscar usuários pelo nome..."
+          }
+        }
+      }
+    },
+    "/auth": {
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "summary": "autenticação de usuário",
+        "description": "Rota responsável por autenticar um usuário na Rede Social.",
+        "operationId": "UserAuth",
+        "parameters": [
+          {
+            "name": "input",
+            "in": "body",
+            "description": "E-mail e senha do usuário.",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "example": "timoteo@lob.com"
+                },
+                "senha": {
+                  "type": "number",
+                  "example": 4124241
+                }
+              },
+              "required": [
+                "email",
+                "senha"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário autenticado!"
+          },
+          "400": {
+            "description": "E-mail e/ou senha inválidos."
+          }
+        }
+      }
+    },
+    "/group": {
+      "post": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "criar grupo",
+        "description": "Rota responsável pela criação de um grupo na Rede Social.",
+        "operationId": "CreateGroup",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_adm": {
+                  "example": "62bde4309c87ec3fea0f9e04"
+                },
+                "nome": {
+                  "example": "Amiguinhos do Timoteo"
+                },
+                "seguidores": {
+                  "example": [
+                    { "_id": "62bde4309c87ec3fea0f9e04" },
+                    { "_id": "62be02b2168cc021ff51479e" },
+                    { "_id": "62c2e6fb2e576326c9546c7c" }
+                  ]
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grupo criado com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado e ser um usuário administrador para criar um grupo!"
+          }
+        }
+      }
+    },
+    "/groups": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "listar grupos",
+        "description": "Rota responsável pela busca de todos os grupos da Rede Social.",
+        "operationId": "GetAllGroups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "example": "62be02b2168cc021ff51479e"
+                  },
+                  "nome": {
+                    "example": "Amiguinhos do Timoteo"
+                  },
+                  "seguidores": {
+                    "example": [
+                      { "_id": "62bf39f56a7274398c79cc6b" },
+                      { "_id": "62bde4309c87ec3fea0f9e04" },
+                      { "_id": "62bdde6f28c57e1c55509b70" }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao buscar os grupos..."
+          }
+        }
+      }
+    },
+    "/group/{id}": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "buscar grupo pelo ID",
+        "description": "Rota responsável pela busca de um grupo por ID na Rede Social.",
+        "operationId": "FindGroupByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62be02b2168cc021ff51479e"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "example": "62be02b2168cc021ff51479e"
+                },
+                "nome": {
+                  "example": "Amiguinhos do Timoteo"
+                },
+                "seguidores": {
+                  "example": [
+                    { "_id": "62bf39f56a7274398c79cc6b" },
+                    { "_id": "62bde4309c87ec3fea0f9e04" },
+                    { "_id": "62bdde6f28c57e1c55509b70" }
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar buscar pelo grupo..."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "remover grupo",
+        "description": "Rota responsável pela remoção de um grupo da Rede Social.",
+        "operationId": "DeleteGroup",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62be02b2168cc021ff51479e"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Grupo removido com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado e ser um usuário administrador para excluir um grupo!"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "editar grupo",
+        "description": "Rota responsável pela edição de um grupo da Rede Social.",
+        "operationId": "UpdateGroup",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62be02b2168cc021ff51479e"
+          },
+          {
+            "name": "input",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nome": {
+                  "example": "Referências para projetos"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações do grupo alterado com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado e ser um usuário administrador para alterar as informações de um grupo!"
+          },
+          "404": {
+            "description": "Houve uma falha interna ao editar o grupo..."
+          }
+        }
+      }
+    },
+    "/groups/{nome}": {
+      "get": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "buscar grupo pelo nome",
+        "description": "Rota responsável pela busca de um grupo pelo nome na Rede Social.",
+        "operationId": "FindGroupByName",
+        "parameters": [
+          {
+            "name": "nome",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "Referen"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id_adm": {
+                    "example": "62bde4309c87ec3fea0f9e04"
+                  },
+                  "nome": {
+                    "example": "Referências para projetos"
+                  },
+                  "seguidores": {
+                    "example": []
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar buscar grupo por nome..."
+          }
+        }
+      }
+    },
+    "/group/members": {
+      "put": {
+        "tags": [
+          "groups"
+        ],
+        "summary": "gerenciar membro de grupo",
+        "description": "Rota responsável pela adição ou remoção de membro de um grupo da Rede Social.",
+        "operationId": "ManageMember",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "input",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_group": {
+                  "example": "62be02b2168cc021ff51479e"
+                },
+                "id_user": {
+                  "example": "62bc8dc67ecd9c1757d023b2"
+                },
+                "action": {
+                  "example": "add"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Usuário adicionado ao grupo com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar autenticado e ser um usuário administrador para adicionar ou remover usuários dos grupos."
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar realizar a ação..."
+          }
+        }
+      }
+    },
+    "/post": {
+      "post": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "criação de publicação",
+        "description": "Rota responsável pela criação de uma publicação na Rede Social.",
+        "operationId": "CreatePost",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "input",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_user": {
+                  "example": "62c2e6fb2e576326c9546c7c"
+                },
+                "tema": {
+                  "example": "Estudos"
+                },
+                "descricao": {
+                  "example": "Encontrei uma notícia incrível para quem tiver interesse em Python!"
+                },
+                "fotoPublicacao": {
+                  "example": ""
+                },
+                "curtidaDetalhe": {
+                  "example": []
+                },
+                "comentarios": {
+                  "example": [
+                    { 
+                      "id_user": "62bde4309c87ec3fea0f9e04",
+                      "texto": "Uau, isso pode ajudar muito!"
+                    }
+                  ]
+                },
+                "data": {
+                  "example": "04/07/2022"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publicação criada com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado para fazer uma publicação."
+          },
+          "404": {
+            "description": "Houve uma falha interna ao criar publicação..."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "gerenciar curtida de publicação",
+        "description": "Rota responsável por gerenciar like e deslike de um usuário para uma publicação da Rede Social.",
+        "operationId": "LikeDislikePost",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "input",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "id_post": {
+                  "example": "62bdc334eb5df8f45f8926a4"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ação realizada com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado para curtir ou tirar sua curtida da publicação!"
+          },
+          "404": {
+            "description": "Houve uma falha interna ao adicionar/remover sua curtida da publicação..."
+          }
+        }
+      }
+    },
+    "/posts": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "listar publicações",
+        "description": "Rota responsável pela listagem de todas as publicações da Rede Social.",
+        "operationId": "GetAllPosts",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "example": "62bdc334eb5df8f45f8926a4"
+                  },
+                  "id_user": {
+                    "example": "62be02b2168cc021ff51479e"
+                  },
+                  "tema": { 
+                    "example": "Férias e diversão"
+                  },
+                  "descricao": {
+                    "example": "Olha que lugar bonito!"
+                  },
+                  "fotoPublicacao": {
+                    "example": "http://fotospaisagens/ilha.png"
+                  },
+                  "curtidaDetalhe": {
+                    "example": []
+                  },
+                  "comentarios": {
+                    "example": []
+                  },
+                  "data": {
+                    "example": "05/07/2022"
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar buscar por publicações..."
+          }
+        }
+      }
+    },
+    "/post/{id}": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "buscar publicação por ID",
+        "description": "Rota responsável por buscar uma publicação da Rede Social.",
+        "operationId": "FindPostByID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62bdc334eb5df8f45f8926a4"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publicação encontrada com sucesso!",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "_id": {
+                  "example": "62bdc334eb5df8f45f8926a4"
+                },
+                "id_user": {
+                  "example": "62be02b2168cc021ff51479e"
+                },
+                "tema": { 
+                  "example": "Férias e diversão"
+                },
+                "descricao": {
+                  "example": "Olha que lugar bonito!"
+                },
+                "fotoPublicacao": {
+                  "example": "http://fotospaisagens/ilha.png"
+                },
+                "curtidaDetalhe": {
+                  "example": []
+                },
+                "comentarios": {
+                  "example": []
+                },
+                "data": {
+                  "example": "05/07/2022"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nenhuma publicação encontrada..."
+          },
+          "401": {
+            "description": "É preciso estar logado para visualizar uma publicação."
+          },
+          "404": {
+            "description": "Houve uma falha interna ao buscar pela publicação..."
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "remover publicação",
+        "description": "Rota responsável por excluir uma publicação da Rede Social.",
+        "operationId": "DeletePost",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "example": "62bdc334eb5df8f45f8926a4"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publicação deletada com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado como o usuário que fez a publicação para poder excluí-la."
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar remover a publicação."
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "editar publicação",
+        "description": "Rota responsável por editar uma publicação da Rede Social.",
+        "operationId": "UpdatePost",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "tema": {
+                  "example": "Distração"
+                },
+                "descricao": {
+                  "example": "Encontrei uma árvore bem diferente no parque esta tarde!"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Publicação alterada com sucesso!"
+          },
+          "401": {
+            "description": "É preciso estar logado e ser o usuário que criou a publicação para poder editar a publicação!"
+          },
+          "404": {
+            "description": "Houve uma falha interna ao tentar editar a publicação..."
+          }
+        }
+      }
+    },
+    "/posts/getLikes": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "detalhe curtidas de publicação",
+        "description": "Rota responsável por buscar as informações dos usuários que curtiram uma publicação.",
+        "operationId": "PostLikesDetails",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca realizada com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "type": "string",
+                    "example": "62be02b2168cc021ff51479e"
+                  },
+                  "nome": {
+                    "type": "string",
+                    "example": "Eric Johnson"
+                  },
+                  "departamento": {
+                    "type": "string",
+                    "example": "Financeiro"
+                  },
+                  "cargo": {
+                    "type": "string",
+                    "example": "Gerente"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "eric.johnson@outlook.com"
+                  },
+                  "data_nascimento": {
+                    "type": "string",
+                    "example": "15/09/1987"
+                  },
+                  "telefone": {
+                    "type": "string",
+                    "example": "1244155226"
+                  },
+                  "admin": {
+                    "type": "boolean",
+                    "example": true
+                  },
+                  "foto": {
+                    "type": "string",
+                    "example": ""
+                  },
+                  "senha": {
+                    "type": "string",
+                    "example": "238dfi7eyc"
+                  },
+                  "seguindo": {
+                    "example": []
+                  },
+                  "seguidores": {
+                    "example": [
+                      {
+                        "_id": "62bf39f56a7274398c79cc6b"
+                      },
+                      {
+                        "_id": "62c2e6fb2e576326c9546c7c"
+                      }
+                    ]
+                  },
+                  "grupos": {
+                    "example": []
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "É preciso estar logado para ver as informações de curtidas da publicação!"
+          }
+        }
+      }
+    },
+    "/posts/addComment": {
+      "put": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "novo comentário na publicação",
+        "description": "Rota responsável por adicionar um comentário a uma publicação da Rede Social.",
+        "operationId": "AddCommentToPost",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          },
+          {
+            "name": "comentario",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "texto": {
+                  "example": "Caramba, que lugar bonito!"
+                },
+                "id_post": {
+                  "example": "62bdc334eb5df8f45f8926a4"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Comentário adicionado à publicação!"
+          },
+          "401": {
+            "description": "É preciso estar logado para adicionar um comentário!"
+          },
+          "404": {
+            "description": "Houve uma falha interna ao adicionar seu comentário à publicação..."
+          }
+        }
+      }
+    },
+    "/posts/postsByUser": {
+      "get": {
+        "tags": [
+          "posts"
+        ],
+        "summary": "buscar publicações por ID de um usuário",
+        "description": "Rota responsável por buscar as publicações pelo ID de um usuário da Rede Social.",
+        "operationId": "GetPostsByUserID",
+        "parameters": [
+          {
+            "name": "authorization",
+            "required": true,
+            "description": "token gerado com JWT de autorização necessário para alterar as informações de um usuário",
+            "in": "header",
+            "type": "string",
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyYmRlNDMwOWM4N2VjM2ZlYTBmOWUwNCIsImVtYWlsIjoidGltb3Rlb0Bsb2IuY29tIiwiaWF0IjoxNjU2OTU2OTIwLCJleHAiOjE2NTcxMjk3MjB9.b5rzv5KKmEcwJ--A9N6RmWTw7KIE4GyN31wEPZXdm-Y"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Busca de publicações do usuário realizada com sucesso!",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": {
+                    "example": "62bdc334eb5df8f45f8926a4"
+                  },
+                  "id_user": {
+                    "example": "62bde4309c87ec3fea0f9e04"
+                  },
+                  "tema": { 
+                    "example": "Férias e diversão"
+                  },
+                  "descricao": {
+                    "example": "Olha que lugar bonito!"
+                  },
+                  "fotoPublicacao": {
+                    "example": "http://fotospaisagens/ilha.png"
+                  },
+                  "curtidaDetalhe": {
+                    "example": []
+                  },
+                  "comentarios": {
+                    "example": []
+                  },
+                  "data": {
+                    "example": "05/07/2022"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "É preciso estar logado para buscar as publicações!"
+          },
+          "404": {
+            "description": "Houve uma falha interna ao buscar suas publicações..."
+          }
+        }
+      }
+    }
+  }
+}

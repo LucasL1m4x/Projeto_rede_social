@@ -36,7 +36,6 @@ class GroupService {
     }
 
     async getAll(req, res) {
-
         try {
             var consultas = await Group.find();
             res.json(consultas);
@@ -102,25 +101,47 @@ class GroupService {
         var loggedUser = await User.find({ "_id": req.loggedUser.id });
         var user = await User.find({ '_id': id_user })
         var grupo = await Group.find({ "_id": id_group });
-        var membros = grupo[0].seguidores;
+        var membros = grupo[0].seguidores; 
         var grupos = user[0].grupos;
+        var msg = ''; 
 
         if (loggedUser[0].admin == true) {
             try {
                 if(action == 'add'){
-                    membros.push({ '_id': id_user })
-                    grupos.push({ '_id': id_group })
-                    res.send("Usuário adicionado ao grupo!");
+                    if (membros.length > 0) {
+                        var membro = membros.find(m => m._id == id_user);
+                        if(membro != undefined) {
+                            msg = "O usuário já é membro do grupo!"; 
+                        } else {
+                            membros.push({ '_id': id_user })
+                            grupos.push({ '_id': id_group })
+                            msg = "Usuário adicionado ao grupo!";
+                        }
+                    } else {
+                        membros.push({ '_id': id_user })
+                        grupos.push({ '_id': id_group })
+                        msg = "Usuário adicionado ao grupo!";
+                    }
                 } else {
-                    membros.splice(membros.findIndex(m => m._id == id_user), 1);
-                    grupos.splice(grupos.findIndex(g => g._id == id_group), 1);
-                    res.send("Usuário removido do grupo!");
+                    if(membros.length > 0){
+                        var membro = membros.find(m => m._id == id_user)
+                        if(membro != undefined) {
+                            membros.splice(membros.findIndex(m => m._id == id_user), 1);
+                            grupos.splice(grupos.findIndex(g => g._id == id_group), 1);
+                            msg = "Usuário removido do grupo!";
+                        } else {
+                            msg = "Usuário não faz parte do grupo!";
+                        }
+                    } else {
+                        msg = "O grupo não possui nenhum membro!";
+                    }
                 }
                 await Group.updateOne({'_id': id_group}, {seguidores: membros});
                 await User.updateOne({'_id': id_user}, {grupos: grupos});
+                res.send(msg);
             } catch (err) {
                 res.status(404);
-                res.send(`Não foi possivel adicionar este usuário. Erro: ${err} `);
+                res.send(`Não foi possivel cumprir a ação. Erro: ${err} `);
             }
         } else {
             res.status(401);

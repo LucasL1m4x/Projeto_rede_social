@@ -7,11 +7,11 @@ const JWTSecret = "Starwars";
 
 const User = mongoose.model("User", user);
 
-class UserService{
+class UserService {
 
     async create(req, res) {
         var { nome, departamento, cargo, email, data_nascimento,
-            telefone, admin, foto, senha, seguindo, seguidores, grupos} = req.body;
+            telefone, admin, foto, senha, seguindo, seguidores, grupos } = req.body;
 
         var newUser = new User({
             nome,
@@ -48,7 +48,6 @@ class UserService{
     }
 
     async getAll(req, res) {
-
         try {
             var consultas = await User.find();
             res.json(consultas);
@@ -75,7 +74,7 @@ class UserService{
     async findByName(req, res) {
         var nome = req.params.nome;
         try {
-            var user = await User.find({ 'nome': nome });
+            var user = await User.find({ nome: {$regex: nome, $options:'i'} });
             res.json(user);
         } catch (err) {
             res.send("consulta inválida");
@@ -115,20 +114,38 @@ class UserService{
     }
 
     async token(req, res) {
-        // var id = req.params.id;
+        // Swagger 
+        // #swagger.tags = ["users"]
+
+        // #swagger.summary = "autenticação de usuário"
+
+        // #swagger.description = "Rota responsável por autenticar um usuário na Rede Social."
+
+        // #swagger.operationId = "UserAuth"
+        /*
+            #swagger.parameters['input'] = {
+                in: 'body',
+                description: 'E-mail e senha do usuário.',
+                required: true,
+                schema: {
+                    $email: 'timoteo@lob.com',
+                    $senha: 4124241
+                }
+            }
+        */
+
         var { email, senha } = req.body;
-        var user = await User.find({'email': email});
-        var idUser = await user[0].id;
+        var user = await User.find({ email: email });
+        var userId = user[0].id;
 
         if (user != undefined) {
             if (user[0].email == email) {
                 if (user[0].senha == senha) {
                     try {
-                        var token = jwt.sign({ id: idUser, email: user[0].email }, JWTSecret, { expiresIn: '48h' });
+                        var token = jwt.sign({ id: userId, email: user[0].email }, JWTSecret, { expiresIn: '48h' });
                         res.status(200);
                         res.json({ token: token });
-                        createLog(idUser);
-                        
+                        createLog(userId);
                     } catch (err) {
                         res.status(400);
                         res.json("Falha interna");
@@ -141,7 +158,9 @@ class UserService{
                 res.status(401);
                 res.send("Email incorreto");
             }
+
         }
+        
     }
 
     async auth(req, res, next) {
@@ -167,6 +186,44 @@ class UserService{
             res.json({ err: "Token inválido!" });
         }
     }
+
+    async manageFollowing(req, res) {
+        var id = req.loggedUser.id;
+        var loggedUser = await User.find({ _id: id });
+        var seguindo = loggedUser[0].seguindo;
+
+        var { id_user } = req.body;
+        var userToFollow = await User.find({ _id: id_user });
+        var seguidores = userToFollow[0].seguidores;
+
+        var remover = false;
+        var msg = "Você seguiu o usuário!";
+
+        if (seguindo.length > 0) {
+            seguindo.forEach(s => {
+                if (s._id == id_user) {
+                    remover = true;
+                    msg = 'Você não está mais seguindo este usuário!';
+                }
+            })
+            if (remover == true) {
+                seguindo.splice(seguindo.findIndex(s => s._id == id_user), 1);
+                seguidores.splice(seguidores.findIndex(s => s._id == id), 1);
+            } else {
+                seguindo.push({ _id: id_user });
+                seguidores.push({ _id: id });
+            }
+        } else {
+            seguindo.push({ _id: id_user });
+            seguidores.push({ _id: id });
+        }
+        await User.updateOne({ _id: id }, { seguindo: seguindo });
+        await User.updateOne({ _id: id_user }, { seguidores: seguidores });
+
+        res.send(msg)
+
+    }
+
 }
 
 module.exports = new UserService();
